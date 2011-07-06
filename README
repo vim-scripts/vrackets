@@ -1,0 +1,15 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=3654
+
+Vrackets helps you a lot by auto-closing the brackets you type.
+For instance, if you type "(", you get:
+    (|)
+("|" is the cursor.)
+You can easily get out of the brackets by typing the closing bracket. If after that you type ")", you get:
+    ()|
+Lastly, brackets are auto-deleted if they are empty. For instance, if your screen looks like this:
+    FooBar(|)
+And you press backspace, you get this:
+    FooBar
+
+By default it works for (), [] and {}. It also works for ¡! and ¿?, for spanish speakers ;).
+You can add more easily if you want (like <>, but I wouldn't recommend it unless for html/xml/etc). Note however that quotation marks and other pairs in which the closing symbol is the same as the opening one won't work as expected (yet).
