@@ -1,6 +1,6 @@
 " File:		vrackets.vim
 " Author:	Gerardo Marset (gammer1994@gmail.com)
-" Version:	0.1
+" Version:	0.1.1
 " Description:	Automatically close/delete different kinds of brackets.
 
 " You can modify this dictionary as you wish. Note however that quotation marks
@@ -21,7 +21,7 @@ inoremap <silent> <BS> <C-R>=VracketBackspace()<CR>
 function! VracketOpen(bracket)
     let l:o = a:bracket
     let l:c = s:match[l:o]
-    
+
     return l:o . l:c . "\<Left>"
 endfunction
 
@@ -35,6 +35,9 @@ function! VracketClose(bracket)
 endfunction
 
 function! VracketBackspace()
+    if col('.') == 1
+        return "\<BS>"
+    endif
     let l:match = get(s:match, s:GetCharAt(-1), '')
     if l:match == '' || l:match != s:GetCharAt(0)
         return "\<BS>"
@@ -45,8 +48,8 @@ endfunction
 function! s:GetCharAt(...)
     " Super Dirty Function(tm).
     let l:n = a:0 ? a:1 : 0
-    let l:im = @@
     let l:vi = &virtualedit
+    let l:im = @@
     set virtualedit=onemore
 
     if l:n == 0
