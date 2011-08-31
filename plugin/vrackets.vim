@@ -1,7 +1,7 @@
 " File:		vrackets.vim
 " Author:	Gerardo Marset (gammer1994@gmail.com)
-" Version:	0.2
-" Last Change:  2011-07-22
+" Version:	0.2.1
+" Last Change:  2011-08-31
 " Description:	Automatically close/delete different kinds of brackets.
 
 " You can modify this dictionary as you wish.
@@ -62,36 +62,25 @@ function! VracketBackspace()
     endif
 
     if get(s:match, s:GetCharAt(-1), '  ') == s:GetCharAt(0)
-        return "\<Esc>2s"
+        return "\<Esc>\"_2s"
     endif
 
     if count(s:smatch, s:GetCharAt(0)) == 1 && s:GetCharAt(-1) == s:GetCharAt(0)
-        return "\<Esc>2s"
+        return "\<Esc>\"_2s"
     endif
     return "\<BS>"
 endfunction
 
-function! s:GetCharAt(...)
-    " Super Dirty Function(tm).
-    let l:n = a:0 ? a:1 : 0
-    let l:vi = &virtualedit
-    let l:im = @@
-    set virtualedit=onemore
-
-    if l:n == 0
-        normal yl
-    elseif l:n < 0
-        execute 'normal ' . -l:n . 'h'
-        normal yl
-        execute 'normal ' . -l:n . 'l'
+function! s:GetCharAt(pos)
+    let l:line = getline('.')
+    let l:pos = s:Column() + a:pos
+    if l:pos < 0 || l:pos >= len(l:line)
+        return ''
     else
-        execute 'normal ' . l:n . 'l'
-        normal yl
-        execute 'normal ' . l:n . 'h'
+        return l:line[l:pos]
     endif
+endfunction
 
-    let l:char = @@
-    let &virtualedit=l:vi
-    let @@ = l:im
-    return l:char
+function s:Column()
+    return col('.') > 1 ? strchars(getline(line('.'))[:col('.') - 2]) : 0
 endfunction
