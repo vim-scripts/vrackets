@@ -1,6 +1,6 @@
 " File:		vrackets.vim
 " Author:	Gerardo Marset (gammer1994@gmail.com)
-" Version:	0.2.1
+" Version:	0.2.2
 " Last Change:  2011-08-31
 " Description:	Automatically close/delete different kinds of brackets.
 
@@ -60,7 +60,7 @@ function! VracketBackspace()
     if col('.') == 1
         return "\<BS>"
     endif
-
+    
     if get(s:match, s:GetCharAt(-1), '  ') == s:GetCharAt(0)
         return "\<Esc>\"_2s"
     endif
@@ -72,7 +72,7 @@ function! VracketBackspace()
 endfunction
 
 function! s:GetCharAt(pos)
-    let l:line = getline('.')
+    let l:line = split(getline('.'), '\zs')
     let l:pos = s:Column() + a:pos
     if l:pos < 0 || l:pos >= len(l:line)
         return ''
@@ -81,6 +81,6 @@ function! s:GetCharAt(pos)
     endif
 endfunction
 
-function s:Column()
+function! s:Column()
     return col('.') > 1 ? strchars(getline(line('.'))[:col('.') - 2]) : 0
 endfunction
