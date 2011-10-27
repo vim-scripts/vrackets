@@ -1,7 +1,7 @@
 " File:		vrackets.vim
 " Author:	Gerardo Marset (gammer1994@gmail.com)
-" Version:	0.2.2
-" Last Change:  2011-08-31
+" Version:	0.2.3
+" Last Change:  2011-10-27
 " Description:	Automatically close/delete different kinds of brackets.
 
 " You can modify this dictionary as you wish.
@@ -28,24 +28,30 @@ endfor
 inoremap <silent> <BS> <C-R>=VracketBackspace()<CR>
 
 function! VracketOpen(bracket)
-    let l:o = a:bracket
-    let l:c = s:match[l:o]
+    let l:c = s:GetCharAt(0) 
+    if l:c =~ "\\S" && count(s:smatch, l:c) + count(values(s:match), l:c) == 0
+        return a:bracket
+    endif
 
-    return l:o . l:c . "\<Left>"
+    return a:bracket . s:match[a:bracket] . "\<Left>"
 endfunction
 
 function! VracketClose(bracket)
-    let l:c = s:match[a:bracket]
+    let l:close = s:match[a:bracket]
 
-    if s:GetCharAt(0) == l:c
+    if s:GetCharAt(0) == l:close
         return "\<Right>"
     endif
-    return l:c
+    return l:close
 endfunction
 
 function! VracketBoth(bracket)
-    if s:GetCharAt(0) == a:bracket
+    let l:c = s:GetCharAt(0) 
+    if l:c == a:bracket
         return "\<Right>"
+    endif
+    if l:c =~ "\\S" && count(s:smatch, l:c) + count(values(s:match), l:c) == 0
+        return a:bracket
     endif
     if col('.') == 1
         return a:bracket . a:bracket . "\<Left>"
